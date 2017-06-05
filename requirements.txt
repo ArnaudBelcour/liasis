@@ -1,0 +1,11 @@
+coverage
+lxml
+numpy
+pandas>=0.19.2
+pronto
+python-coveralls
+requests
+scipy
+SPARQLWrapper
+statsmodels
+tqdm
