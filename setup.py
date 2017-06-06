@@ -5,7 +5,6 @@ setup(name='pbsea',
       version='0.1',
       url='https://github.com/ArnaudBelcour/pbsea',
       author='A. Belcour',
-      author_email='marco@alertavert.com',
       license='GNU Affero General Public License v3.0',
       classifiers=[
         # How mature is this project? Common values are
