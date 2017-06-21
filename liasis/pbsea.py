@@ -4,7 +4,6 @@ import logging
 import csv
 import math
 import numpy as np
-import pandas as pa
 import scipy.stats as stats
 import six
 
