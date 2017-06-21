@@ -1,10 +1,11 @@
 from setuptools import setup, Extension, Distribution
 
-setup(name='pbsea',
+setup(name='liasis',
       description='Pandas-Based Single Enrichment Analysis',
-      version='0.1',
-      url='https://github.com/ArnaudBelcour/pbsea',
+      version='0.1.2',
+      url='https://github.com/ArnaudBelcour/liasis',
       author='A. Belcour',
+      author_email='arnbpro@gmail.com',
       license='GNU Affero General Public License v3.0',
       classifiers=[
         # How mature is this project? Common values are
@@ -23,7 +24,7 @@ setup(name='pbsea',
         # Environnement, OS, languages
         'Programming Language :: Python :: 3'
       ],
-      packages=['pbsea'],
+      packages=['liasis'],
       install_requires=[
             'numpy',
             'pandas>=0.19.2',
