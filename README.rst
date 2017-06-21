@@ -1,4 +1,8 @@
-|Build Status| |Coverage Status|
+.. image:: https://travis-ci.org/ArnaudBelcour/liasis.svg?branch=master
+    :target: https://travis-ci.org/ArnaudBelcour/liasis
+
+.. image:: https://coveralls.io/repos/github/ArnaudBelcour/liasis/badge.svg
+    :target: https://coveralls.io/github/ArnaudBelcour/liasis
 
 Liasis: Singular Enrichment Analysis
 ====================================
@@ -16,51 +20,20 @@ Two class are present:
 Right now the analysis take two input files but it will accept pandas dataframe, 
 with two columns (one for the interest values and one for the reference values).
 
-Enrichment Analysis
-===================
-
-This workflow performs a Singular Enrichment Analysis. This analysis
+The script performs a Singular Enrichment Analysis. This analysis
 takes a list of genes (for example differentially expressed genes) and
 compute an enrichment term for each annotation term in this list. For a
 better definition, read the `article writed by Huang et al.
 (2009) <https://academic.oup.com/nar/article-lookup/doi/10.1093/nar/gkn923>`__.
 
-The idea behind this workflow is to make a tool to analyze genome and
-with few datas. Also, by using class it allows to use separately some of
-its components (like enrichmentAnalysis class).
-
-fileManagement.py manages the files to create counting files used by
-enrichmentAnalysis.py.
-
-enrichmentAnalysis.py is dividied in tow class. The first class
-("EnrichmentAnalysis") is the basic method, which computes an
-hypergeometric test for variables (now it works for GO terms, in the
-future it will work for pathway) and calculates different multiple tests
+The first class ("EnrichmentAnalysis") is the basic method, which computes an
+hypergeometric test for variables and calculates different multiple tests
 corrections (Bonferroni, Holm, Sidak, Benjamini & Hochberg and SGoF).
 The second class ("GOEnrichmentAnalysis") inherits from
 "EnrichmentAnalysis" and overrides a function to add GO label to the
 results.
 
-workflow\_manager.py is the main script.
-
-This workflow works with three directories (inputFiles, temporaryFiles
-and outputFiles) :
-
--  inputFiles must have three files : queryResults.csv (a csv file
-   resulting from queriyng on the Gene Ontology to have all the GO terms
-   with their GO labels (it will be automated in the future),
-   GOTermsPlasmoGenome.tsv (which contains all the GO terms from the
-   genome of your species, it will also be automated) and your data (in
-   .csv).
-
--  temporaryFiles : will contain files used during the script, it will
-   be created during the analysis. It contains datas extracted from the
-   external databases.
-
--  outputFiles : the results of the analysis in tsv, it will be created
-   during the analysis.
-
-Test used :
+Tests used :
 
 -  Hypergeometric test to compare the distribution of GO terms in your
    list and in the complete organism.
