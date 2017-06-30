@@ -12,8 +12,9 @@ An enrichment analysis compares the occurrence of an entity in a list of interes
 to the occurence in a reference (for example the number of cat in one country compared 
 to the number of cat in the world).
 
-Two class are present:
+Three class are present:
 
+#. PandasBasedEnrichmentAnalysis: to peform a Singular Enrichment Analysis on a pandas dataframe.
 #. EnrichmentAnalysis: to perform a Singular Enrichment Analysis on everything.
 #. GOEnrichmentAnalysis: to perform a Singular Enrichment Analysis on GO terms.
 
@@ -26,10 +27,13 @@ compute an enrichment term for each annotation term in this list. For a
 better definition, read the `article writed by Huang et al.
 (2009) <https://academic.oup.com/nar/article-lookup/doi/10.1093/nar/gkn923>`__.
 
-The first class ("EnrichmentAnalysis") is the basic method, which computes an
-hypergeometric test for variables and calculates different multiple tests
+The first class ("PandasBasedEnrichmentAnalysis") is the basic method on pandas dataframe,
+which computes an hypergeometric test for variables and calculates different multiple tests
 corrections (Bonferroni, Holm, Sidak, Benjamini & Hochberg and SGoF).
-The second class ("GOEnrichmentAnalysis") inherits from
+
+The second class ("EnrichmentAnalysis") peforms an analysis on file.
+
+The third class ("GOEnrichmentAnalysis") inherits from
 "EnrichmentAnalysis" and overrides a function to add GO label to the
 results.
 
