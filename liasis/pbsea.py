@@ -10,14 +10,10 @@ import six
 
 from statsmodels.sandbox.stats.multicomp import multipletests
 
-input_directory = "inputFiles/"
-temporary_directory = 'temporaryFiles/'
-output_directory = 'outputFiles/'
-
 logging.basicConfig(filename='analysis.log', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-def preprocessing_files(object_to_analyze, name_file_interest, name_file_reference, ):
+def preprocessing_files(object_to_analyze, name_path_file_interest, name_path_file_reference):
     '''
     Function creating a dataframe from two files, compatible with PandasBasedEnrichmentAnalysis.
     '''
@@ -25,11 +21,11 @@ def preprocessing_files(object_to_analyze, name_file_interest, name_file_referen
     logger.info('-------------------------------------Preprocessing files-------------------------------------')
 
     logger.debug('Object to analyze: %s', object_to_analyze)
-    logger.debug('Name of the file of interest: %s', name_file_interest)
-    logger.debug('Name of the file of reference: %s', name_file_reference)
+    logger.debug('Name of the file of interest: %s', name_path_file_interest)
+    logger.debug('Name of the file of reference: %s', name_path_file_reference)
 
-    counts_df = pa.read_csv(name_file_interest + ".tsv", sep = "\t")
-    counts_df_reference = pa.read_csv(name_file_reference + ".tsv", sep = "\t")
+    counts_df = pa.read_csv(name_path_file_interest + ".tsv", sep = "\t")
+    counts_df_reference = pa.read_csv(name_path_file_reference + ".tsv", sep = "\t")
 
     counts_df.set_index(object_to_analyze, inplace=True)
     column_interest_name = counts_df.columns[0]
@@ -38,9 +34,6 @@ def preprocessing_files(object_to_analyze, name_file_interest, name_file_referen
     column_reference_name = counts_df_reference.columns[0]
 
     df_joined = counts_df.join(counts_df_reference)
-
-    df_joined.replace(np.nan, '', inplace=True)
-    df_joined = df_joined[df_joined[column_reference_name] != '']
 
     return df_joined, column_interest_name, column_reference_name
 
@@ -150,7 +143,7 @@ class PandasBasedEnrichmentAnalysis():
     def normal_approximation_threshold(self, value):
         self._normal_approximation_threshold = value
 
-    def hypergeometric_test_on_dataframe(self, df):
+    def test_on_dataframe(self, df):
         analyzed_objects_with_hypergeo_test_nan = []
 
         approximation_threshold = self.normal_approximation_threshold
@@ -184,7 +177,7 @@ class PandasBasedEnrichmentAnalysis():
 
     def compute_normal_approximation(self, row):
         number_of_object_in_interest = row[self.column_interest]
-        number_of_object_in_reference = row[self.reference_column]
+        number_of_object_in_reference = row[self.column_reference]
 
         p = number_of_object_in_reference / self.number_of_analyzed_object_of_reference
         q = 1 - p
@@ -370,7 +363,7 @@ class PandasBasedEnrichmentAnalysis():
                                                                                 self.number_of_analyzed_object_of_reference)
         logger.debug('input_dataframe: %s', dataframe_used)
 
-        dataframe_used = self.hypergeometric_test_on_dataframe(dataframe_used)
+        dataframe_used = self.test_on_dataframe(dataframe_used)
         dataframe_used, significative_objects = self.multiple_testing_correction(dataframe_used)
 
         yes_answers = ['yes', 'y', 'oui', 'o']
@@ -459,54 +452,6 @@ class EnrichmentAnalysisExperimental(PandasBasedEnrichmentAnalysis):
                  number_of_object_of_interest, number_of_genes_in_reference,
                  alpha, threshold_normal_approximation)
         self.multiple_test_names = ['Sidak', 'Bonferroni', 'Holm', 'SGoF', 'BenjaminiHochberg', 'BenjaminiYekutieli']
-
-    def hypergeometric_test_on_dataframe(self, df):
-        analyzed_objects_with_hypergeo_test_nan = []
-
-        approximation_threshold = self.normal_approximation_threshold
-
-        value_higher_threshold = all(df['Counts'] > approximation_threshold)
-
-        if value_higher_threshold == False:
-            self.statistic_method = "pvalue_hypergeometric"
-            df[self.statistic_method] = df.apply(self.compute_hypergeometric_test, axis=1)
-            df = df.sort_values(self.statistic_method)
-
-        elif value_higher_threshold == True:
-            self.output_columns[4] = 'pvalue_normal_approximation'
-            self.statistic_method = 'pvalue_normal_approximation'
-            df[self.statistic_method] = df.apply(self.compute_normal_approximation, axis=1)
-            df = df.sort_values(self.statistic_method)
-
-        return df
-
-    def compute_hypergeometric_test(self, row):
-        number_of_object_in_interest = row[self.column_interest]
-        number_of_object_in_reference = row[self.column_reference]
-
-        pvalue_hypergeo = stats.hypergeom.sf(number_of_object_in_interest - 1, self.number_of_analyzed_object_of_reference,
-                                                number_of_object_in_reference, self.number_of_analyzed_object_of_interest)
-
-        return pvalue_hypergeo
-
-    def compute_normal_approximation(self, row):
-        number_of_object_in_interest = row[self.column_interest]
-        number_of_object_in_reference = row[self.column_reference]
-
-        p = number_of_object_in_reference / self.number_of_analyzed_object_of_reference
-        q = 1 - p
-        t = self.number_of_analyzed_object_of_interest / self.number_of_analyzed_object_of_reference
-
-        mu = self.number_of_analyzed_object_of_interest  * p
-
-        if 0 in [self.number_of_analyzed_object_of_interest, p, q, (1 - t)]:
-            return np.nan
-
-        sigma = math.sqrt(self.number_of_analyzed_object_of_interest  * p * q * (1 - t))
-
-        pvalue_normal = stats.norm.sf(number_of_object_in_interest, loc=mu, scale=sigma)
-
-        return pvalue_normal
 
     def multiple_testing_correction(self, df):
         logger.info('-------------------------------------Multiple testing correction-------------------------------------')
@@ -662,6 +607,10 @@ class EnrichmentAnalysisExperimental(PandasBasedEnrichmentAnalysis):
 
             df.replace('', np.nan, inplace=True)
 
+        column_names = df.columns.tolist()
+        column_names[0] = index_column_name
+
+        df.columns = column_names
         df.set_index(index_column_name, inplace=True)
 
         return df

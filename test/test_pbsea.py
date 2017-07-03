@@ -4,7 +4,7 @@ import pandas as pa
 import scipy.stats as stats
 import unittest
 
-from liasis import PandasBasedEnrichmentAnalysis, preprocessing_files
+from liasis import PandasBasedEnrichmentAnalysis, EnrichmentAnalysisExperimental, preprocessing_files
 from unittest.mock import patch
 
 test_data_directory = 'test_data/'
@@ -20,11 +20,12 @@ class enrichmentAnalysis_test(unittest.TestCase):
             test_data_directory_enrichment+'counting_objects_in_interest',
             test_data_directory_enrichment+'counting_objects_in_genome')
         self.obj = PandasBasedEnrichmentAnalysis(df, column_interest, column_reference, 122, 1293, 0.05, 10000)
+        self.class_sgof_test = EnrichmentAnalysisExperimental(df, column_interest, column_reference, 122, 1293, 0.05, 10000)
 
     def tearDown(self):
         del self.obj
 
-    def test_hypergeometric_test_on_dataframe_over(self):
+    def test_hypergeometric_on_dataframe(self):
         '''
         Datas are from : https://fr.mathworks.com/help/stats/hygecdf.html?s_tid=gn_loc_drop
         '''
@@ -35,59 +36,42 @@ class enrichmentAnalysis_test(unittest.TestCase):
         counts_df.set_index('Genes', inplace = True)
         counts_df_reference.set_index('Genes', inplace = True)
 
+        df_joined = counts_df.join(counts_df_reference)
+
         df_joined_wih_results = pa.read_csv(test_data_directory_sf + 'result_test_sf_hypergeometric' + ".tsv", sep = "\t")
 
         df_joined_wih_results.set_index('Genes', inplace = True)
 
         enrichment_analysis_test = PandasBasedEnrichmentAnalysis(df_joined, 'Counts', 'CountsReference', 300, 10000, 0.05, 10000)
-        df_joined = enrichment_analysis_test.hypergeometric_test_on_dataframe(df_joined, 'over', 'CountsReference')
+        df_joined = enrichment_analysis_test.test_on_dataframe(df_joined)
 
-        np.testing.assert_array_almost_equal(df_joined['pvalue_hypergeometric'].tolist(), df_joined_wih_results['pvalue_hypergeometric'].tolist(), decimal = 4)
+        np.testing.assert_array_almost_equal(df_joined['pvalue_hypergeometric'].tolist(),
+                                             df_joined_wih_results['pvalue_hypergeometric'].tolist(), decimal = 4)
 
-    def test_hypergeometric_test_on_dataframe_under(self):
-        '''
-        Datas are from : https://www.geneprof.org/GeneProf/tools/hypergeometric.jsp
-        '''
-        print("\nTesting hypergeometric cdf on dataframe ")
-        counts_df = pa.read_csv(test_data_directory_cdf + 'data_interest_test_cdf_hypergeometric' + ".tsv", sep = "\t")
-        counts_df_reference = pa.read_csv(test_data_directory_cdf + 'data_reference_test_cdf_hypergeometric' + ".tsv", sep = "\t")
-
-        counts_df.set_index('Genes', inplace = True)
-        counts_df_reference.set_index('Genes', inplace = True)
-
-        df_joined = counts_df.join(counts_df_reference)
-
-        df_joined_wih_results = pa.read_csv(test_data_directory_cdf + 'result_test_cdf_hypergeometric' + ".tsv", sep = "\t")
-
-        df_joined_wih_results.set_index('Genes', inplace = True)
-
-        enrichment_analysis_test = PandasBasedEnrichmentAnalysis(df_joined, 'Counts', 'CountsReference', 10, 100, 0.05, 10000)
-        df_joined = enrichment_analysis_test.hypergeometric_test_on_dataframe(df_joined, 'under', 'CountsReference')
-
-        np.testing.assert_array_almost_equal(df_joined['pvalue_hypergeometric'].tolist(), df_joined_wih_results['pvalue_hypergeometric'].tolist(), decimal = 4)
-
-    def test_normal_approximation_on_dataframe_over(self):
+    def test_normal_approximation_on_dataframe(self):
         '''
         Datas have been invented for the test.
         Results for the hypergeometric test are from : https://www.geneprof.org/GeneProf/tools/hypergeometric.jsp
         pvalue_hypergeometric found : 4.834533775884863e-8
         '''
         print("\nTesting normal approximation sf on dataframe ")
-        enrichment_analysis_test = PandasBasedEnrichmentAnalysis('Genes', 'data_interest_test_sf_hypergeometric', 'data_reference_test_sf_hypergeometric', 10000, 100000, 0.05, 10000)
-
-        counts_df = pa.read_csv(test_data_directory_sf + 'data_interest_test_sf_hypergeometric_normal' + ".tsv", sep = "\t")
-        counts_df_reference = pa.read_csv(test_data_directory_sf + 'data_reference_test_sf_hypergeometric_normal' + ".tsv", sep = "\t")
+        counts_df = pa.read_csv(test_data_directory_sf + 'data_interest_test_sf_normal' + ".tsv", sep = "\t")
+        counts_df_reference = pa.read_csv(test_data_directory_sf + 'data_reference_test_sf_normal' + ".tsv", sep = "\t")
 
         counts_df.set_index('Genes', inplace = True)
         counts_df_reference.set_index('Genes', inplace = True)
 
         df_joined = counts_df.join(counts_df_reference)
 
-        enrichment_analysis_test = PandasBasedEnrichmentAnalysis(df_joined, 'Counts', 'CountsReference', 10000, 100000, 0.05, 10000)
-        df_joined['pvalue_normal_approximation'] = df_joined.apply(enrichment_analysis_test.compute_normal_approximation, args=('CountsReference', 'over'), axis=1)
-        df_joined = enrichment_analysis_test.hypergeometric_test_on_dataframe(df_joined, 'over', 'CountsReference')
+        df_joined_wih_results = pa.read_csv(test_data_directory_sf + 'result_test_sf_normal' + ".tsv", sep = "\t")
 
-        np.testing.assert_array_almost_equal(df_joined['pvalue_hypergeometric'].tolist(), df_joined['pvalue_normal_approximation'].tolist(), decimal = 4)
+        df_joined_wih_results.set_index('Genes', inplace = True)
+
+        enrichment_analysis_test = PandasBasedEnrichmentAnalysis(df_joined, 'Counts', 'CountsReference', 10000, 100000, 0.05, 1000)
+        df_joined = enrichment_analysis_test.test_on_dataframe(df_joined)
+
+        np.testing.assert_array_almost_equal(df_joined_wih_results['pvalue_normal'].tolist(),
+                                             df_joined['pvalue_normal_approximation'].tolist(), decimal = 4)
 
     def test_correction_bonferroni(self):
         '''
@@ -144,9 +128,9 @@ class enrichmentAnalysis_test(unittest.TestCase):
         print("\nTesting SGoF multiple testing correction using G test")
         pvalue_df = pa.read_csv(test_data_directory_multiple + 'multiple_test_data_sgof_G_test' + ".tsv", sep = "\t")
 
-        self.obj.statistic_method = "pvalue_hypergeometric"
-        self.obj.object_to_analyze= "pvalue_hypergeometric"
-        pvalue_df = self.obj.correction_sgof(pvalue_df)
+        self.class_sgof_test.statistic_method = "pvalue_hypergeometric"
+        self.class_sgof_test.object_to_analyze= "pvalue_hypergeometric"
+        pvalue_df = self.class_sgof_test.correction_sgof(pvalue_df)
 
         pvalue_truth_df = pa.read_csv(test_data_directory_multiple + 'multiple_test_result_sgof_G_test' + ".tsv", sep = "\t")
         pvalue_truth_df = pvalue_truth_df.sort_values(by = "pvalue_hypergeometric")
@@ -161,9 +145,9 @@ class enrichmentAnalysis_test(unittest.TestCase):
         print("\nTesting SGoF multiple testing correction using binomial test ")
         pvalue_df = pa.read_csv(test_data_directory_multiple + 'multiple_test_data_sgof_binomial' + ".tsv", sep = "\t")
 
-        self.obj.statistic_method = "pvalue_hypergeometric"
-        self.obj.object_to_analyze= "pvalue_hypergeometric"
-        pvalue_df = self.obj.correction_sgof(pvalue_df)
+        self.class_sgof_test.statistic_method = "pvalue_hypergeometric"
+        self.class_sgof_test.object_to_analyze= "pvalue_hypergeometric"
+        pvalue_df = self.class_sgof_test.correction_sgof(pvalue_df)
 
         pvalue_truth_df = pa.read_csv(test_data_directory_multiple + 'multiple_test_result_sgof_binomial' + ".tsv", sep = "\t")
         pvalue_truth_df = pvalue_truth_df.sort_values(by = "pvalue_hypergeometric")
