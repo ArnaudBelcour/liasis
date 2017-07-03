@@ -5,9 +5,9 @@ from setuptools import setup, Extension, Distribution
 readme = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
 setup(name='liasis',
-      description='Single Enrichment Analysis',
+      description='Singular Enrichment Analysis',
       long_description=readme,
-      version='0.2.0',
+      version='0.2.1',
       url='https://github.com/ArnaudBelcour/liasis',
       author='A. Belcour',
       author_email='arnbpro@gmail.com',

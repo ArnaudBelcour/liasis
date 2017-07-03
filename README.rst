@@ -15,8 +15,9 @@ to the number of cat in the world).
 Three class are present:
 
 #. PandasBasedEnrichmentAnalysis: to peform a Singular Enrichment Analysis on a pandas dataframe.
-#. EnrichmentAnalysis: to perform a Singular Enrichment Analysis on everything.
 #. GOEnrichmentAnalysis: to perform a Singular Enrichment Analysis on GO terms.
+#. EnrichmentAnalysisExperimental: to perform a Singular Enrichment Analysis on everything with SgoF
+multiple testing correction.
 
 Right now the analysis take two input files but it will accept pandas dataframe, 
 with two columns (one for the interest values and one for the reference values).
@@ -31,11 +32,12 @@ The first class ("PandasBasedEnrichmentAnalysis") is the basic method on pandas 
 which computes an hypergeometric test for variables and calculates different multiple tests
 corrections (Bonferroni, Holm, Sidak, Benjamini & Hochberg and SGoF).
 
-The second class ("EnrichmentAnalysis") peforms an analysis on file.
-
-The third class ("GOEnrichmentAnalysis") inherits from
-"EnrichmentAnalysis" and overrides a function to add GO label to the
+The second class ("GOEnrichmentAnalysis") inherits from
+"PandasBasedEnrichmentAnalysis" and overrides a function to add GO label to the
 results.
+
+The third class ("EnrichmentAnalysis") peforms an analysis on file and add the
+SGoF multiple testing correction.
 
 Tests used :
 
