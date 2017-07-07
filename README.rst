@@ -16,8 +16,7 @@ Three class are present:
 
 #. PandasBasedEnrichmentAnalysis: to peform a Singular Enrichment Analysis on a pandas dataframe.
 #. GOEnrichmentAnalysis: to perform a Singular Enrichment Analysis on GO terms.
-#. EnrichmentAnalysisExperimental: to perform a Singular Enrichment Analysis on everything with SgoF
-multiple testing correction.
+#. EnrichmentAnalysisExperimental: to perform a Singular Enrichment Analysis on everything with SgoF multiple testing correction.
 
 Right now the analysis take two input files but it will accept pandas dataframe, 
 with two columns (one for the interest values and one for the reference values).
