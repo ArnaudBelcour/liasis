@@ -4,7 +4,9 @@ import logging
 import csv
 import math
 import numpy as np
+import os
 import pandas as pa
+import pronto
 import scipy.stats as stats
 import six
 
@@ -16,6 +18,10 @@ logger = logging.getLogger(__name__)
 def preprocessing_files(object_to_analyze, name_path_file_interest, name_path_file_reference):
     '''
     Function creating a dataframe from two files, compatible with PandasBasedEnrichmentAnalysis.
+    The input are the name of the column to analyse (common between the two files) and the
+    two path and name of the file (with extension).
+    Files must contain two columns, one with the object to analyse and the other with the
+    occurrences of the object.
     '''
 
     logger.info('-------------------------------------Preprocessing files-------------------------------------')
@@ -24,8 +30,19 @@ def preprocessing_files(object_to_analyze, name_path_file_interest, name_path_fi
     logger.debug('Name of the file of interest: %s', name_path_file_interest)
     logger.debug('Name of the file of reference: %s', name_path_file_reference)
 
-    counts_df = pa.read_csv(name_path_file_interest + ".tsv", sep = "\t")
-    counts_df_reference = pa.read_csv(name_path_file_reference + ".tsv", sep = "\t")
+    file_name_interest, file_extension_interest = os.path.splitext(name_path_file_interest)
+    if file_extension_interest == '.xls':
+        counts_df = pa.read_excel(name_path_file_interest, sep=None, na_values="")
+    else:
+        counts_df = pa.read_csv(name_path_file_interest, sep=None,
+                                        engine="python", na_values="")
+
+    file_name_reference, file_extension_reference = os.path.splitext(name_path_file_reference)
+    if file_extension_reference == '.xls':
+        counts_df_reference = pa.read_excel(name_path_file_reference, sep=None, na_values="")
+    else:
+        counts_df_reference = pa.read_csv(name_path_file_reference, sep=None,
+                                        engine="python", na_values="")
 
     counts_df.set_index(object_to_analyze, inplace=True)
     column_interest_name = counts_df.columns[0]
@@ -36,6 +53,27 @@ def preprocessing_files(object_to_analyze, name_path_file_interest, name_path_fi
     df_joined = counts_df.join(counts_df_reference)
 
     return df_joined, column_interest_name, column_reference_name
+
+
+    def go_number_label_dictionary_creation_from_http():
+        '''
+        Create a dictionary containing GO number as key
+        and GO label as value in order to translate GO number.
+        This function need an internet connexion because it is
+        interrogating the Gene Ontology with Pronto module.
+        Use it to create the dictionary needed in the
+        GOEnrichmentAnalysis class.
+        '''
+
+        go_number_to_labels = {}
+
+        go_ontology = pronto.Ontology('http://purl.obolibrary.org/obo/go/go-basic.obo')
+
+        for go_term in go_ontology:
+            go_number_to_labels[go_term.id] = go_term.name
+        dict_to_file(d_go_label_to_number, 'go_number_label', specification)
+
+        return go_number_to_labels
 
 class PandasBasedEnrichmentAnalysis():
 

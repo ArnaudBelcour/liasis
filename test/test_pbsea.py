@@ -17,8 +17,8 @@ class enrichmentAnalysis_test(unittest.TestCase):
 
     def setUp(self):
         df, column_interest, column_reference = preprocessing_files('GOs',
-            test_data_directory_enrichment+'counting_objects_in_interest',
-            test_data_directory_enrichment+'counting_objects_in_genome')
+            test_data_directory_enrichment+'counting_objects_in_interest.tsv',
+            test_data_directory_enrichment+'counting_objects_in_genome.tsv')
         self.obj = PandasBasedEnrichmentAnalysis(df, column_interest, column_reference, 122, 1293, 0.05, 10000)
         self.class_sgof_test = EnrichmentAnalysisExperimental(df, column_interest, column_reference, 122, 1293, 0.05, 10000)
 
