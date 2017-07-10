@@ -4,6 +4,10 @@
 .. image:: https://coveralls.io/repos/github/ArnaudBelcour/liasis/badge.svg
     :target: https://coveralls.io/github/ArnaudBelcour/liasis
 
+.. image:: https://pypi.python.org/pypi/liasis.svg
+	:target: https://pypi.python.org/pypi/liasis
+	:alt: Latest Version
+
 Liasis: Singular Enrichment Analysis
 ====================================
 
@@ -80,3 +84,21 @@ And multiple testing corrections :
    Rolán-Alvarez. “A New Multitest Correction (SGoF) That Increases Its
    Statistical Power When Increasing the Number of Tests.” BMC
    Bioinformatics 10 (2009): 209.
+
+Installation
+-----------
+
+Actually, the package only works on Python 3.
+
+Using pip
+---------
+
+.. code:: sh
+	pip install liasis
+
+Using GitHub
+------------
+
+.. code:: sh
+	pip install -e git+https://github.com/liasis/liasis.git
+

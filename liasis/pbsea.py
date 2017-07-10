@@ -9,7 +9,10 @@ import pandas as pa
 import pronto
 import scipy.stats as stats
 import six
+import urllib.request
 
+from gzip import GzipFile
+from lxml import etree
 from statsmodels.sandbox.stats.multicomp import multipletests
 
 logging.basicConfig(filename='analysis.log', level=logging.DEBUG)
@@ -55,25 +58,66 @@ def preprocessing_files(object_to_analyze, name_path_file_interest, name_path_fi
     return df_joined, column_interest_name, column_reference_name
 
 
-    def go_number_label_dictionary_creation_from_http():
-        '''
-        Create a dictionary containing GO number as key
-        and GO label as value in order to translate GO number.
-        This function need an internet connexion because it is
-        interrogating the Gene Ontology with Pronto module.
-        Use it to create the dictionary needed in the
-        GOEnrichmentAnalysis class.
-        '''
+def go_number_label_dictionary_creation_from_http():
+    '''
+    Create a dictionary containing GO number as key
+    and GO label as value in order to translate GO number.
+    This function need an internet connexion because it is
+    interrogating the Gene Ontology with Pronto module.
+    Use it to create the dictionary needed in the
+    GOEnrichmentAnalysis class.
+    '''
 
-        go_number_to_labels = {}
+    go_number_to_labels = {}
 
-        go_ontology = pronto.Ontology('http://purl.obolibrary.org/obo/go/go-basic.obo')
+    go_ontology = pronto.Ontology('http://purl.obolibrary.org/obo/go/go-basic.obo')
 
-        for go_term in go_ontology:
-            go_number_to_labels[go_term.id] = go_term.name
-        dict_to_file(d_go_label_to_number, 'go_number_label', specification)
+    for go_term in go_ontology:
+        go_number_to_labels[go_term.id] = go_term.name
+    dict_to_file(d_go_label_to_number, 'go_number_label', specification)
 
-        return go_number_to_labels
+    return go_number_to_labels
+
+def ec_number_name_dictionary_creation_from_ftp():
+    '''
+    Create a dictionary containing EC number as key
+    and EC name as value in order to translate EC number.
+    '''
+    enzyme_number_to_names = {}
+
+    url = 'ftp://ftp.expasy.org/databases/enzyme/enzyme.dat'
+    enzyme_data = urllib.request.urlopen(url).read().decode('utf-8')
+
+    for enzyme_description in enzyme_data.split('//\n'):
+        for line in enzyme_description.split("\n"):
+            if 'ID' in line and 'DR' not in line:
+                enzyme_number = line.replace('ID   ', '').strip()
+            if 'DE' in line and 'DR' not in line:
+                enzyme_name = line.replace('DE ','').replace('.', '').strip()
+                enzyme_number_to_names[enzyme_number] = enzyme_name
+
+    return enzyme_number_to_names
+
+def interpro_name_dictionary_creation_from_ftp():
+    '''
+    Create a dictionary containing interpro ID as key
+    and interpro name as value in order to translate interpro number.
+    '''
+    interpro_id_to_names = {}
+
+    url = 'ftp://ftp.ebi.ac.uk/pub/databases/interpro/interpro.xml.gz'
+    response = urllib.request.urlopen(url)
+
+    with GzipFile(fileobj = response) as xmlFile:
+        root = etree.parse(xmlFile).getroot()
+        for child in root:
+            interpro_id = child.attrib.get('id')
+            interpro_name = child.attrib.get('short_name')
+            if interpro_id is not None:
+                interpro_id_to_names[interpro_id] = interpro_name
+
+    return interpro_id_to_names
+
 
 class PandasBasedEnrichmentAnalysis():
 
@@ -413,35 +457,38 @@ class PandasBasedEnrichmentAnalysis():
         return dataframe_used
 
 
-class GOEnrichmentAnalysis(PandasBasedEnrichmentAnalysis):
+class AnnotationEnrichmentAnalysis(PandasBasedEnrichmentAnalysis):
     '''
-    GO Enrichment Analysis on data using Pandas Based Enrichment Analysis.
+    Annotation (GO terms, Enzyme Codes, Interpro) Enrichment Analysis on data
+    using Pandas Based Enrichment Analysis.
     '''
     def __init__(self, dataframe, name_column_interest, name_column_reference,
                  number_of_object_of_interest, number_of_genes_in_reference,
-                 alpha, threshold_normal_approximation, d_go_label_to_number):
+                 alpha, threshold_normal_approximation, annotation_label_to_numbers,
+                 annotation_category):
         PandasBasedEnrichmentAnalysis.__init__(self, dataframe, name_column_interest, name_column_reference,
                  number_of_object_of_interest, number_of_genes_in_reference,
                  alpha, threshold_normal_approximation)
-        self.output_columns.append("GOLabel")
-        self._gos_labels_to_numbers = d_go_label_to_number
+        self.output_columns.append(annotation_category)
+        self._annotation_id_to_labels = annotation_label_to_numbers
+        self.annotation = annotation_category
 
     @property
-    def gos_labels_to_numbers(self):
-        return self._gos_labels_to_numbers
+    def annotation_id_to_labels(self):
+        return self._annotation_id_to_labels
 
-    @gos_labels_to_numbers.setter
-    def gos_labels_to_numbers(self, go_dictionnary):
-        self._gos_labels_to_numbers = go_dictionnary
+    @annotation_id_to_labels.setter
+    def annotation_id_to_labels(self, annotation_dictionnary):
+        self._annotation_id_to_labels = annotation_dictionnary
 
-    def tranlsation_go_number_to_go_label(self, go_numbers, d_go_label_to_number):
-        go_labels = []
+    def tranlsation_id_to_label(self, annotation_numbers, annotation_id_to_labels):
+        annotation_labels = []
 
-        for go_number in go_numbers:
-            if go_number in d_go_label_to_number:
-                go_labels.append(d_go_label_to_number[go_number])
+        for annotation_number in annotation_numbers:
+            if annotation_number in annotation_id_to_labels:
+                annotation_labels.append(annotation_id_to_labels[annotation_number])
 
-        return go_labels
+        return annotation_labels
 
     def multiple_testing_correction(self, df):
         logger.info('-------------------------------------Multiple testing correction with GO translation-------------------------------------')
@@ -453,9 +500,9 @@ class GOEnrichmentAnalysis(PandasBasedEnrichmentAnalysis):
         df = self.correction_holm(df)
 
         significative_objects = {}
-        translation_gos_labels_to_numbers = self.gos_labels_to_numbers
+        translation_annotation_id_to_name = self.annotation_id_to_labels
 
-        logger.debug('GO label/number dictionary: %s', len(translation_gos_labels_to_numbers))
+        logger.debug('Annotation ID/Label dictionary: %s', len(translation_annotation_id_to_name))
 
         for multiple_test_name in self.multiple_test_names:
             if multiple_test_name == 'Sidak':
@@ -467,14 +514,14 @@ class GOEnrichmentAnalysis(PandasBasedEnrichmentAnalysis):
             elif multiple_test_name in ['Holm', 'BenjaminiHochberg', 'BenjaminiYekutieli']:
                 object_significatives = self.selection_object_with_adjusted_pvalue(multiple_test_name, df)
 
-            go_label_significatives = self.tranlsation_go_number_to_go_label(object_significatives, translation_gos_labels_to_numbers)
-            significative_objects[multiple_test_name] = go_label_significatives
+            annotation_label_significatives = self.tranlsation_id_to_label(object_significatives, translation_annotation_id_to_name)
+            significative_objects[multiple_test_name] = annotation_label_significatives
 
-        for go, row in df.iterrows():
-            if go in translation_gos_labels_to_numbers:
-                df.set_value(go, 'GOLabel', translation_gos_labels_to_numbers[go])
+        for annotation, row in df.iterrows():
+            if annotation in translation_annotation_id_to_name:
+                df.set_value(annotation, self.annotation, translation_annotation_id_to_name[annotation])
 
-        logger.debug('Dataframe with GO labels: %s', df)
+        logger.debug('Dataframe with Annotation labels: %s', df)
 
         return df, significative_objects
 
