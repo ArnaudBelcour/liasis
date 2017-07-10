@@ -4,9 +4,8 @@
 .. image:: https://coveralls.io/repos/github/ArnaudBelcour/liasis/badge.svg
     :target: https://coveralls.io/github/ArnaudBelcour/liasis
 
-.. image:: https://pypi.python.org/pypi/liasis.svg
+.. image:: https://img.shields.io/pypi/v/liasis.svg
 	:target: https://pypi.python.org/pypi/liasis
-	:alt: Latest Version
 
 Liasis: Singular Enrichment Analysis
 ====================================
