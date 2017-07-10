@@ -19,21 +19,24 @@ Installation
 Actually, the package only works on Python 3.
 
 Using pip
-~~~~~~~~~
+~~~~~~
 
 .. code:: sh
 
 	pip install liasis
 
 Using GitHub
-~~~~~~~~~~~~
+~~~~~~~~
 
 .. code:: sh
 
 	pip install -e git+https://github.com/ArnaudBelcour/liasis.git@master#egg=liasis
 
 Singular Enrichment Analysis
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------
+
+Analysis
+~~~~~
 
 Actually one script is used: pbsea.py (for Pandas Based Singular Enrichment Analysis).
 An enrichment analysis compares the occurrence of an entity in a list of interest 
@@ -73,7 +76,8 @@ Tests used :
 
 -  Normal approximation when using big numbers.
 
-And multiple testing corrections :
+Multiple Testing Correction
+~~~~~~~~~~~~
 
 -  `Bonferroni
    Correction <http://www.jstor.org/stable/2282330?seq=1#page_scan_tab_contents>`__

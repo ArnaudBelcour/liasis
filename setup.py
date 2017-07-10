@@ -7,7 +7,7 @@ readme = open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='u
 setup(name='liasis',
       description='Singular Enrichment Analysis',
       long_description=readme,
-      version='0.2.4.1',
+      version='0.2.4.2',
       url='https://github.com/ArnaudBelcour/liasis',
       author='A. Belcour',
       author_email='arnbpro@gmail.com',
