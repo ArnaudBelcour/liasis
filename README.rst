@@ -9,6 +9,31 @@
 
 Liasis: Singular Enrichment Analysis
 ====================================
+.. contents:: Table of contents
+   :backlinks: top
+   :local:
+
+Installation
+-----------
+
+Actually, the package only works on Python 3.
+
+Using pip
+~~~~~~~~~
+
+.. code:: sh
+
+	pip install liasis
+
+Using GitHub
+~~~~~~~~~~~~
+
+.. code:: sh
+
+	pip install -e git+https://github.com/ArnaudBelcour/liasis.git@master#egg=liasis
+
+Singular Enrichment Analysis
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Actually one script is used: pbsea.py (for Pandas Based Singular Enrichment Analysis).
 An enrichment analysis compares the occurrence of an entity in a list of interest 
@@ -83,29 +108,3 @@ And multiple testing corrections :
    Rolán-Alvarez. “A New Multitest Correction (SGoF) That Increases Its
    Statistical Power When Increasing the Number of Tests.” BMC
    Bioinformatics 10 (2009): 209.
-
-------------------------------------------
-
-.. contents:: Table of contents
-   :backlinks: top
-   :local:
-
-Installation
------------
-
-Actually, the package only works on Python 3.
-
-Using pip
-~~~~~~~~~
-
-.. code:: sh
-
-	pip install liasis
-
-Using GitHub
-~~~~~~~~~~~~
-
-.. code:: sh
-
-	pip install -e git+https://github.com/ArnaudBelcour/liasis.git@master#egg=liasis
-
