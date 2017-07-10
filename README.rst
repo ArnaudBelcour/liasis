@@ -84,20 +84,28 @@ And multiple testing corrections :
    Statistical Power When Increasing the Number of Tests.” BMC
    Bioinformatics 10 (2009): 209.
 
+------------------------------------------
+
+.. contents:: Table of contents
+   :backlinks: top
+   :local:
+
 Installation
 -----------
 
 Actually, the package only works on Python 3.
 
 Using pip
----------
+~~~~~~~~~
 
 .. code:: sh
+
 	pip install liasis
 
 Using GitHub
-------------
+~~~~~~~~~~~~
 
 .. code:: sh
-	pip install -e git+https://github.com/liasis/liasis.git
+
+	pip install -e git+https://github.com/ArnaudBelcour/liasis.git@master#egg=liasis
 
