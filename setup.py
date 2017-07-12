@@ -2,12 +2,16 @@ import os
 
 from setuptools import setup
 
-readme = open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='utf-8').read()
+with open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='utf-8') as readme_file:
+      readme = readme_file.read()
+
+with open('requirements.txt', 'r') as requirement_file:
+      requirements = requirement_file.read().splitlines()
 
 setup(name='liasis',
       description='Singular Enrichment Analysis',
       long_description=readme,
-      version='0.2.4.3',
+      version='0.2.5',
       url='https://github.com/ArnaudBelcour/liasis',
       author='A. Belcour',
       author_email='arnbpro@gmail.com',
@@ -30,11 +34,5 @@ setup(name='liasis',
         'Programming Language :: Python :: 3'
       ],
       packages=['liasis'],
-      install_requires=[
-            'lxml',
-            'numpy',
-            'pandas>=0.19.2',
-            'scipy',
-            'statsmodels',
-      ],
+      install_requires=requirements,
 )
