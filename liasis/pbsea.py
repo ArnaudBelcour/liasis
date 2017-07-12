@@ -110,9 +110,11 @@ def interpro_name_dictionary_creation_from_ftp():
 
     with GzipFile(fileobj = response) as xmlFile:
         root = etree.parse(xmlFile).getroot()
-        for child in root:
-            interpro_id = child.attrib.get('id')
-            interpro_name = child.attrib.get('short_name')
+        for child_IPR in root:
+            interpro_id = child_IPR.attrib.get('id')
+            for child_IPR_data in child_IPR:
+                if child_IPR_data.tag == 'name':
+                    interpro_name = child_IPR_data.text
             if interpro_id is not None:
                 interpro_id_to_names[interpro_id] = interpro_name
 
