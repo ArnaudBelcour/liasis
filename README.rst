@@ -16,7 +16,7 @@ Liasis: Singular Enrichment Analysis
 Installation
 ------------
 
-Actually, the package only works on Python 3.
+Actually, the package only works on Python 3 (developed on 3.4 and tested on 3.4, 3.5 and 3.6).
 
 Using pip
 ~~~~~~~~~
@@ -38,19 +38,28 @@ Singular Enrichment Analysis
 Analysis
 ~~~~~~~~
 
-Actually one script is used: pbsea.py (for Pandas Based Singular Enrichment Analysis).
 An enrichment analysis compares the occurrence of an entity in a list of interest 
 to the occurence in a reference (for example the number of cat in one country compared 
 to the number of cat in the world).
 
-Three class are present:
+Two files are used : pbsea.py (Pandas Based Singular Enrichment Analysis), preprocessing.py.
+
+In pbsea.py, three class are present:
 
 #. PandasBasedEnrichmentAnalysis: to peform a Singular Enrichment Analysis on a pandas dataframe.
-#. AnnotationEnrichmentAnalysis: to perform a Singular Enrichment Analysis on GO terms.
+#. AnnotationEnrichmentAnalysis: to perform a Singular Enrichment Analysis on Annotation terms.
 #. EnrichmentAnalysisExperimental: to perform a Singular Enrichment Analysis on everything with SgoF multiple testing correction.
 
-Right now the analysis take two input files but it will accept pandas dataframe, 
-with two columns (one for the interest values and one for the reference values).
+In preprocessing.py, four functions are present:
+
+#. preprocessing_files: create a pandas dataframe from two files.
+#. go_translation_dictionary_creation: create a dictionary containing GO number as key and GO label as value.
+#. ec_translation_dictionary_creation: create a dictionary containing EC number as key and EC name as value.
+#. interpro_translation_dictionary_creation: create a dictionary containing InterPro id as key and InterPro name as value.
+
+The analysis take two input files (with preprocessing) or a pandas dataframe,
+with two columns (one for the interest values, one for the reference values and
+in index the object to analyze (e.g. GO terms)).
 
 The script performs a Singular Enrichment Analysis. This analysis
 takes a list of genes (for example differentially expressed genes) and
@@ -112,3 +121,35 @@ Multiple Testing Correction
    Rolán-Alvarez. “A New Multitest Correction (SGoF) That Increases Its
    Statistical Power When Increasing the Number of Tests.” BMC
    Bioinformatics 10 (2009): 209.
+
+Use
+~~~
+
+The input of the analysis is a pandas dataframe with two columns (occurrence in interest
+and occurrence in reference) and an index (the object to analyse) like this one:
+
+=========== ====================== =======================
+index       Occurrence in interest Occurrence in reference
+=========== ====================== =======================
+GO:00000001 2                      4
+GO:00000002 10                     20
+=========== ====================== =======================
+
+For GO terms, EC and InterPro id you can use one of the function of translation dictionary creation
+to obtain a dictionary allowing you to translate the id into name.
+
+.. code:: python
+
+    from liasis import PandasBasedEnrichmentAnalysis
+
+    number_gene_interest = 5
+    number_gene_reference = 6700
+    alpha = 0.05
+    normal_approximation_threshold = 100000
+
+    analysis = PandasBasedEnrichmentAnalysis(dataframe, 'Occurrence in interest',
+                            'Occurrence in reference', number_gene_interest, number_gene_reference,
+                            alpha, normal_approximation_threshold)
+    result_dataframe = analysis.enrichment_analysis()
+
+The result will be a pandas dataframe.

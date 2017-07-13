@@ -11,7 +11,7 @@ with open('requirements.txt', 'r') as requirement_file:
 setup(name='liasis',
       description='Singular Enrichment Analysis',
       long_description=readme,
-      version='0.2.5',
+      version='0.2.6',
       url='https://github.com/ArnaudBelcour/liasis',
       author='A. Belcour',
       author_email='arnbpro@gmail.com',

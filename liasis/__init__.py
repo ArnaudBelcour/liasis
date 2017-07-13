@@ -1,3 +1,4 @@
 import pandas as pa
 
-from liasis.pbsea import PandasBasedEnrichmentAnalysis, AnnotationEnrichmentAnalysis, EnrichmentAnalysisExperimental, preprocessing_files, ec_number_name_dictionary_creation_from_ftp, interpro_name_dictionary_creation_from_ftp
+from liasis.pbsea import PandasBasedEnrichmentAnalysis, AnnotationEnrichmentAnalysis, EnrichmentAnalysisExperimental
+from liasis.preprocessing import preprocessing_files, go_translation_dictionary_creation, ec_translation_dictionary_creation, interpro_translation_dictionary_creation
