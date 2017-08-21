@@ -5,13 +5,13 @@ from setuptools import setup
 with open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='utf-8') as readme_file:
       readme = readme_file.read()
 
-with open('requirements.txt', 'r') as requirement_file:
+with open(os.path.join(os.path.dirname(__file__), 'requirements.txt'), encoding='utf-8') as requirement_file:
       requirements = requirement_file.read().splitlines()
 
 setup(name='liasis',
       description='Singular Enrichment Analysis',
       long_description=readme,
-      version='0.2.6',
+      version='0.2.6.1',
       url='https://github.com/ArnaudBelcour/liasis',
       author='A. Belcour',
       author_email='arnbpro@gmail.com',
