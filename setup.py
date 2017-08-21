@@ -5,9 +5,6 @@ from setuptools import setup
 with open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='utf-8') as readme_file:
       readme = readme_file.read()
 
-with open(os.path.join(os.path.dirname(__file__), 'requirements.txt'), encoding='utf-8') as requirement_file:
-      requirements = requirement_file.read().splitlines()
-
 setup(name='liasis',
       description='Singular Enrichment Analysis',
       long_description=readme,
@@ -34,5 +31,14 @@ setup(name='liasis',
         'Programming Language :: Python :: 3'
       ],
       packages=['liasis'],
-      install_requires=requirements,
+      install_requires=[
+            'coverage',
+            'lxml',
+            'numpy',
+            'pandas>=0.19.2',
+            'pronto',
+            'python-coveralls',
+            'scipy',
+            'statsmodels',
+      ],
 )
