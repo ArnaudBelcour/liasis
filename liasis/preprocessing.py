@@ -17,14 +17,15 @@ def preprocessing_files(object_to_analyze, name_path_file_interest, name_path_fi
     occurrences of the object.
     '''
 
-    file_name_interest, file_extension_interest = os.path.splitext(name_path_file_interest)
+    #Select only the extension of the file and not the file name.
+    file_extension_interest = os.path.splitext(name_path_file_interest)[1]
     if file_extension_interest == '.xls':
         counts_df = pa.read_excel(name_path_file_interest, sep=None, na_values="")
     else:
         counts_df = pa.read_csv(name_path_file_interest, sep=None,
                                         engine="python", na_values="")
 
-    file_name_reference, file_extension_reference = os.path.splitext(name_path_file_reference)
+    file_extension_reference = os.path.splitext(name_path_file_reference)[1]
     if file_extension_reference == '.xls':
         counts_df_reference = pa.read_excel(name_path_file_reference, sep=None, na_values="")
     else:
@@ -46,10 +47,10 @@ def go_translation_dictionary_creation():
     '''
     Create a dictionary containing GO number as key
     and GO label as value in order to translate GO number.
-    This function need an internet connexion because it is
+    This function needs an internet connexion because it is
     interrogating the Gene Ontology with Pronto module.
     Use it to create the dictionary needed in the
-    GOEnrichmentAnalysis class.
+    AnnotationEnrichmentAnalysis class.
     '''
     go_number_to_labels = {}
 
@@ -64,6 +65,9 @@ def ec_translation_dictionary_creation():
     '''
     Create a dictionary containing EC number as key
     and EC name as value in order to translate EC number.
+    This function needs an internet connexion.
+    Use it to create the dictionary needed in the
+    AnnotationEnrichmentAnalysis class.
     '''
     enzyme_number_to_names = {}
 
@@ -84,6 +88,9 @@ def interpro_translation_dictionary_creation():
     '''
     Create a dictionary containing interpro ID as key
     and interpro name as value in order to translate interpro number.
+    This function needs an internet connexion.
+    Use it to create the dictionary needed in the
+    AnnotationEnrichmentAnalysis class.
     '''
     interpro_id_to_names = {}
 

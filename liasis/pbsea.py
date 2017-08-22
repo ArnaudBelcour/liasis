@@ -358,6 +358,14 @@ class AnnotationEnrichmentAnalysis(PandasBasedEnrichmentAnalysis):
     Annotation (GO terms, Enzyme Codes, Interpro) Enrichment Analysis on data
     using Pandas Based Enrichment Analysis.
 
+    This class takes two new attributes:
+        -annotation_label_to_numbers: it is a dictionnary containing annotation
+    number as key and annotation label as value. It allows a translation of
+    annotation id to ease reading results. The dictionnary can be obtained
+    with the functions contained in preprocessing.py (for GO terms, EC number
+    and InterPro identifiers).
+        -annotation_category: it is a string, it will be the name of the
+    column which will contain the label of the annotation translated.
     '''
     def __init__(self, dataframe, name_column_interest, name_column_reference,
                  number_of_object_of_interest, number_of_genes_in_reference,

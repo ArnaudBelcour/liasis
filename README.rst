@@ -16,7 +16,7 @@ Liasis: Singular Enrichment Analysis
 Installation
 ------------
 
-Actually, the package only works on Python 3 (developed on 3.4 and tested on 3.4, 3.5 and 3.6).
+The package only works on Python 3 (developed on 3.4 and tested on 3.4, 3.5 and 3.6).
 
 Using pip
 ~~~~~~~~~
@@ -75,7 +75,7 @@ The second class ("AnnotationEnrichmentAnalysis") inherits from
 "PandasBasedEnrichmentAnalysis" and overrides a function to add label for three
 annotations (GO terms, EC and InterPro domains) to the results.
 
-The third class ("EnrichmentAnalysis") peforms an analysis using the
+The third class ("EnrichmentAnalysis") peforms an analysis and add the
 SGoF multiple testing correction.
 
 Tests used :
