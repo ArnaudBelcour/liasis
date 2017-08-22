@@ -211,14 +211,14 @@ class PandasBasedEnrichmentAnalysis():
 
         df = df[self.output_columns]
 
-        comment_file = open(output_directory + "pValuesOf_over.tsv", "w")
+        comment_file = open("results_annotation_over.tsv", "w")
         comment_file.write("# Number of objects in reference : " + str(self.number_of_analyzed_object_of_reference) +
                                         "\t Number of objects in interest : " + str(self.number_of_analyzed_object_of_interest) +"\n")
         df.to_csv(comment_file, sep="\t", float_format='%.6f', index=True, header=True, quoting=csv.QUOTE_NONE)
 
         comment_file.close()
 
-        csvfile = open(output_directory + "significatives_over.tsv", "w", newline="")
+        csvfile = open("results_significatives_over.tsv", "w", newline="")
 
         writer = csv.writer(csvfile, delimiter="\t")
         writer.writerow(['Sidak', 'Bonferroni', 'Holm', 'BenjaminiHochberg', 'BenjaminiYekutieli'])
@@ -357,6 +357,7 @@ class AnnotationEnrichmentAnalysis(PandasBasedEnrichmentAnalysis):
     '''
     Annotation (GO terms, Enzyme Codes, Interpro) Enrichment Analysis on data
     using Pandas Based Enrichment Analysis.
+
     '''
     def __init__(self, dataframe, name_column_interest, name_column_reference,
                  number_of_object_of_interest, number_of_genes_in_reference,
@@ -475,14 +476,14 @@ class EnrichmentAnalysisExperimental(PandasBasedEnrichmentAnalysis):
 
         df = df[self.output_columns]
 
-        comment_file = open(output_directory + "pValuesOf" + self.object_to_analyze + "_over.tsv", "w")
+        comment_file = open("results_" + self.object_to_analyze + "_over.tsv", "w")
         comment_file.write("# Number of objects in reference : " + str(self.number_of_analyzed_object_of_reference) +
                                         "\t Number of objects in interest : " + str(self.number_of_analyzed_object_of_interest) +"\n")
         df.to_csv(comment_file, sep="\t", float_format='%.6f', index=True, header=True, quoting=csv.QUOTE_NONE)
 
         comment_file.close()
 
-        csvfile = open(output_directory + "significatives" + self.object_to_analyze + "_over.tsv", "w", newline="")
+        csvfile = open("results_significatives" + self.object_to_analyze + "_over.tsv", "w", newline="")
 
         writer = csv.writer(csvfile, delimiter="\t")
         writer.writerow([self.object_to_analyze + 'Sidak', self.object_to_analyze + 'Bonferroni', self.object_to_analyze + 'Holm',
