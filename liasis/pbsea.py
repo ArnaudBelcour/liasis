@@ -207,9 +207,8 @@ class PandasBasedEnrichmentAnalysis():
         Holm (position 3), Benjamini & Hochberg (position 0) and Benjamini & Yekutieli (position 1).
         '''
         logger.info('-------------------------------------Write output-------------------------------------')
-        df.sort_values(['pValueBenjaminiHochberg'], inplace=True)
 
-        df = df[self.output_columns]
+        df.sort_values(['pValueBenjaminiHochberg'], inplace=True)
 
         comment_file = open("results_annotation_over.tsv", "w")
         comment_file.write("# Number of objects in reference : " + str(self.number_of_analyzed_object_of_reference) +
