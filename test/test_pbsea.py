@@ -4,7 +4,7 @@ import pandas as pa
 import scipy.stats as stats
 import unittest
 
-from liasis import PandasBasedEnrichmentAnalysis, EnrichmentAnalysisExperimental, preprocessing_files
+from pbsea import PandasBasedEnrichmentAnalysis, EnrichmentAnalysisExperimental, preprocessing_files
 from unittest.mock import patch
 
 test_data_directory = 'test_data/'

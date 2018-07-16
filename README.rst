@@ -1,13 +1,13 @@
-.. image:: https://travis-ci.org/ArnaudBelcour/liasis.svg?branch=master
-    :target: https://travis-ci.org/ArnaudBelcour/liasis
+.. image:: https://travis-ci.org/ArnaudBelcour/pbsea.svg?branch=master
+    :target: https://travis-ci.org/ArnaudBelcour/pbsea
 
-.. image:: https://coveralls.io/repos/github/ArnaudBelcour/liasis/badge.svg
-    :target: https://coveralls.io/github/ArnaudBelcour/liasis
+.. image:: https://coveralls.io/repos/github/ArnaudBelcour/pbsea/badge.svg
+    :target: https://coveralls.io/github/ArnaudBelcour/pbsea
 
-.. image:: https://img.shields.io/pypi/v/liasis.svg
-	:target: https://pypi.python.org/pypi/liasis
+.. image:: https://img.shields.io/pypi/v/pbsea.svg
+	:target: https://pypi.python.org/pypi/pbsea
 
-Liasis: Singular Enrichment Analysis
+pbsea: Pandas Based Singular Enrichment Analysis
 ====================================
 .. contents:: Table of contents
    :backlinks: top
@@ -16,21 +16,21 @@ Liasis: Singular Enrichment Analysis
 Installation
 ------------
 
-The package only works on Python 3 (developed on 3.4 and tested on 3.4, 3.5 and 3.6).
+The package works on Python 3 (developed on 3.4 and tested on 3.4, 3.5 and 3.6).
 
 Using pip
 ~~~~~~~~~
 
 .. code:: sh
 
-	pip install liasis
+	pip install pbsea
 
 Using GitHub
 ~~~~~~~~~~~~
 
 .. code:: sh
 
-	pip install -e git+https://github.com/ArnaudBelcour/liasis.git@master#egg=liasis
+	pip install -e git+https://github.com/ArnaudBelcour/pbsea.git@master#egg=pbsea
 
 Singular Enrichment Analysis
 ----------------------------
@@ -140,7 +140,7 @@ to obtain a dictionary allowing you to translate the id into name.
 
 .. code:: python
 
-    from liasis import PandasBasedEnrichmentAnalysis
+    from pbsea import PandasBasedEnrichmentAnalysis
 
     number_gene_interest = 5
     number_gene_reference = 6700
