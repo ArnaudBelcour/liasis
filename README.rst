@@ -8,7 +8,7 @@
 	:target: https://pypi.python.org/pypi/pbsea
 
 pbsea: Pandas Based Singular Enrichment Analysis
-====================================
+================================================
 .. contents:: Table of contents
    :backlinks: top
    :local:
@@ -16,7 +16,7 @@ pbsea: Pandas Based Singular Enrichment Analysis
 Installation
 ------------
 
-The package works on Python 3 (developed on 3.4 and tested on 3.4, 3.5 and 3.6).
+The package works on Python 3.
 
 Using pip
 ~~~~~~~~~
