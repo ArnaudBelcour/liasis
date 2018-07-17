@@ -289,7 +289,7 @@ class PandasBasedEnrichmentAnalysis():
             if pvalue_correction_holm > self.alpha and pvalue_max < pvalue_correction_holm:
                 pvalue_max = pvalue_correction_holm
 
-            df.set_value(analyzed_object, 'pValueHolm', pvalue_correction_holm)
+            df.at[analyzed_object, 'pValueHolm'] = pvalue_correction_holm
 
         return df
 
@@ -421,9 +421,7 @@ class AnnotationEnrichmentAnalysis(PandasBasedEnrichmentAnalysis):
             annotation_label_significatives = self.tranlsation_id_to_label(object_significatives, translation_annotation_id_to_name)
             significative_objects[multiple_test_name] = annotation_label_significatives
 
-        for annotation, row in df.iterrows():
-            if annotation in translation_annotation_id_to_name:
-                df.set_value(annotation, self.annotation, translation_annotation_id_to_name[annotation])
+       df[self.annotation] = [translation_annotation_id_to_name[annotation] for annotation in df.index if annotation in translation_annotation_id_to_name]
 
         logger.debug('Dataframe with Annotation labels: %s', df)
 
@@ -570,26 +568,26 @@ class EnrichmentAnalysisExperimental(PandasBasedEnrichmentAnalysis):
             for corrected_value in reordered_pvalues:
                 if len(reordered_pvalues) == 1:
                     if corrected_value >= g_threshold:
-                        df.set_value(row_number, 'pValueSGoF', 'significant')
-                        df.set_value(row_number, 'pValueSGoFValue', corrected_value)
+                        df.at[row_number, 'pValueSGoF'] = 'significant'
+                        df.at[row_number, 'pValueSGoFValue'] = corrected_value
                         row_number = row_number + 1
                     else:
-                        df.set_value(row_number, 'pValueSGoF', np.nan)
-                        df.set_value(row_number, 'pValueSGoFValue', np.nan)
+                        df.at[row_number, 'pValueSGoF'] = np.nan
+                        df.at[row_number, 'pValueSGoFValue'] = np.nan
                         row_number = row_number + 1
                 if len(prob_each_pvalues) > 1:
                     if prob_each_pvalues[-1] >= prob_each_pvalues[-2]:
                         if corrected_value >= g_threshold:
-                            df.set_value(row_number, 'pValueSGoF', 'significant')
-                            df.set_value(row_number, 'pValueSGoFValue', corrected_value)
+                            df.at[row_number, 'pValueSGoF'] = 'significant'
+                            df.at[row_number, 'pValueSGoFValue'] = corrected_value
                             row_number = row_number + 1
                         else:
-                            df.set_value(row_number, 'pValueSGoF', np.nan)
-                            df.set_value(row_number, 'pValueSGoFValue', np.nan)
+                            df.at[row_number, 'pValueSGoF'] = np.nan
+                            df.at[row_number, 'pValueSGoFValue'] = np.nan
                             row_number = row_number + 1
                     else:
-                        df.set_value(row_number, 'pValueSGoF', np.nan)
-                        df.set_value(row_number, 'pValueSGoFValue', np.nan)
+                        df.at[row_number, 'pValueSGoF'] = np.nan
+                        df.at[row_number, 'pValueSGoFValue'] = np.nan
                         row_number = row_number + 1
             if R == 0:
                 df['pValueSGoF'] = np.nan
