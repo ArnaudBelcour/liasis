@@ -421,7 +421,7 @@ class AnnotationEnrichmentAnalysis(PandasBasedEnrichmentAnalysis):
             annotation_label_significatives = self.tranlsation_id_to_label(object_significatives, translation_annotation_id_to_name)
             significative_objects[multiple_test_name] = annotation_label_significatives
 
-       df[self.annotation] = [translation_annotation_id_to_name[annotation] for annotation in df.index if annotation in translation_annotation_id_to_name]
+        df[self.annotation] = [translation_annotation_id_to_name[annotation] for annotation in df.index if annotation in translation_annotation_id_to_name]
 
         logger.debug('Dataframe with Annotation labels: %s', df)
 
