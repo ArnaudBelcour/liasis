@@ -1,4 +1,4 @@
 import pandas as pa
 
 from pbsea.pbsea import PandasBasedEnrichmentAnalysis, AnnotationEnrichmentAnalysis, EnrichmentAnalysisExperimental
-from pbsea.preprocessing import preprocessing_files, go_translation_dictionary_creation, ec_translation_dictionary_creation, interpro_translation_dictionary_creation
+from pbsea.preprocessing import counting_objects, preprocessing_files, go_translation_dictionary_creation, ec_translation_dictionary_creation, interpro_translation_dictionary_creation

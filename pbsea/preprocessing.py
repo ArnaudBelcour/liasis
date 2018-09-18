@@ -42,6 +42,34 @@ def preprocessing_files(object_to_analyze, name_path_file_interest, name_path_fi
 
     return df_joined, column_interest_name, column_reference_name
 
+def counting_objects(index_column, object_to_analyze, name_path_file_interest, name_path_file_reference):
+    df_go = pa.read_csv(name_path_file_reference, sep=None,
+                                        engine="python", na_values="")
+    df_go = df_go[[index_column, object_to_analyze]]
+    df_go.set_index(index_column, inplace=True)
+
+    df_int = pa.read_csv(name_path_file_interest, sep='\t',
+                                        engine="python", na_values="")
+    df_int.set_index(index_column,inplace=True)
+
+    df_join = df_int.join(df_go)
+    df = df_join[object_to_analyze].str.split(',').apply(pa.Series,1).stack().to_frame().reset_index(level=[0,1])
+    df = df[[index_column,0]]
+    df.columns = [index_column, object_to_analyze]
+    df.set_index(index_column, inplace=True)
+
+    df_go = df_go[object_to_analyze].str.split(',').apply(pa.Series,1).stack().to_frame().reset_index(level=[0,1])
+    df_go = df_go[[index_column,0]]
+    df_go.columns = [index_column, object_to_analyze]
+    df_go.set_index(index_column, inplace=True)
+
+    df_int = df[object_to_analyze].value_counts().reset_index().rename(columns={'index':object_to_analyze, object_to_analyze:'count_int'})
+    df_ref = df_go[object_to_analyze].value_counts().reset_index().rename(columns={'index':object_to_analyze, object_to_analyze:'count_ref'})
+
+    df_int.set_index(object_to_analyze,inplace=True)
+    df_ref.set_index(object_to_analyze,inplace=True)
+
+    return df_int, df_ref
 
 def go_translation_dictionary_creation():
     '''
