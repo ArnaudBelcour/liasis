@@ -11,13 +11,6 @@ Installation
 
 The package works on Python 3.
 
-Using pip
-~~~~~~~~~
-
-.. code:: sh
-
-	pip install pbsea
-
 Using GitHub
 ~~~~~~~~~~~~
 
