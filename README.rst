@@ -1,11 +1,4 @@
-.. image:: https://travis-ci.org/ArnaudBelcour/pbsea.svg?branch=master
-    :target: https://travis-ci.org/ArnaudBelcour/pbsea
-
-.. image:: https://coveralls.io/repos/github/ArnaudBelcour/pbsea/badge.svg
-    :target: https://coveralls.io/github/ArnaudBelcour/pbsea
-
-.. image:: https://img.shields.io/pypi/v/pbsea.svg
-	:target: https://pypi.python.org/pypi/pbsea
+Just use `Pingouin <https://github.com/raphaelvallat/pingouin>`__ instead. This package is not maintained.
 
 pbsea: Pandas Based Singular Enrichment Analysis
 ================================================
